@@ -1,0 +1,86 @@
+// cover some element-ui styles
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+//菜单栏图标样式
+.svg-icon[data-v-c8a70580] {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  font-size: 20px;
+}
+//子系统的图标
+.icon-yonghuzhongxin:before {
+  content: "\e602";
+  color: rgb(50, 160, 154);
+}
+.icon-jiankong:before {
+  content: "\e6b7";
+  color: rgb(50, 160, 154);
+}
+
+.icon-dingdanguanli:before {
+    content: "\e601";
+    color: rgb(50, 160, 154);
+}
+.icon-jichushuju:before {
+  content: "\e60e";
+  color: rgb(50, 160, 154);
+}
+
+.icon-ziyuan146:before {
+    content: "\e6ea";
+    color: rgb(50, 160, 154);
+}
+.icon-shujujiaohuan:before {
+  content: "\e622";
+  color: rgb(50, 160, 154);
+}

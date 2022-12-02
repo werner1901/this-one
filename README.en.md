@@ -1,7 +1,7 @@
-# bosssoft-train-user-permission-centre-front-end-full
+# sd365-sc--permission-centre-front-end
 
 #### Description
-包括了前端的完整代码，主要用于后端同学进行功能接收
+用于供应链用户中心的前端项目
 
 #### Software Architecture
 Software architecture description
