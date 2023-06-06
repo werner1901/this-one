@@ -34,6 +34,7 @@ import 'element-ui/lib/theme-chalk/icon.css' // element-ui 图标库
 import svgIcons from 'e-icon-picker/lib/getSvg'
 import SYSUPDLOG from '@/components/SystemUpgradeLog'
 import JsonViewer from 'vue-json-viewer'
+import VueClipboards from 'vue-clipboard2'
 // iconList.addIcon(svgIcons)
 // console.log(svgIcons, '图标')
 // import SlideVerify from 'vue-monoplasty-slide-verify';
@@ -61,6 +62,7 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.use(SlideVerify)
 Vue.use(SD365UI)
 Vue.use(JsonViewer)
+Vue.use(VueClipboards)
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

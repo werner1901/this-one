@@ -18,6 +18,7 @@ export function getUserResource(params) {
 }
 
 export function add(RoleDTO) {
+  console.log(RoleDTO)
   return request({
     url: ROLE_URL,
     method: 'post',
@@ -25,11 +26,11 @@ export function add(RoleDTO) {
   })
 }
 
-export function remove(id, version) {
+export function remove(id, version,name,code) {
   return request({
     url: ROLE_URL,
     method: 'delete',
-    params: { id: id, version: version },
+    params: { id: id, version: version,name:name,code:code },
   })
 }
 

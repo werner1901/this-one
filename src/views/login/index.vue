@@ -95,13 +95,6 @@ export default {
     Slider
   },
   data() {
-    // const validateUsername = (rule, value, callback) => {
-    //   if (!validUsername(value)) {
-    //     callback(new Error('Please enter the correct user'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能少于6位'))

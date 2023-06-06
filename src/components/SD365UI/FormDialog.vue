@@ -19,6 +19,7 @@
     :lock-scroll="false"
     :modal="true"
     :close-on-click-modal="false"
+    @open="open"
     @close="onBtnCancelClick"
   >
     <el-form
@@ -56,6 +57,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description: 每次打开时清空上次内容
+     * @return {*}
+     */
+    open(){
+      this.$refs.formName.resetFields()
+    },
     /**
      * @description: 取消的时候回调外部时间
      * @return {*}
@@ -110,7 +118,7 @@ export default {
   max-height: 85% !important;
   min-height: 70%;
   overflow-y: auto;
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     width: 2px;
     background-color: #ccc;
   }
@@ -119,6 +127,6 @@ export default {
   }
   &::-webkit-scrollbar-track {
     background-color: #ccc;
-  }
+  } */
 }
 </style>

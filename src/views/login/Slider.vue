@@ -58,7 +58,7 @@ export default {
 .slider-item{
   position: relative;
   width: 350px;
-  heigth:240px;
+  height:240px;
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);

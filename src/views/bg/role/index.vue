@@ -1,17 +1,5 @@
 <template>
   <div>
-    <!--    左边的树-->
-    <!-- <el-col :span="4">
-      <el-card shadow="always" class="box-card" style="height:100%">
-        <div slot="header" class="clearfix">
-          <em class="el-icon-menu">角色管理</em>
-        </div>
-        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
-      </el-card>
-
-    </el-col>
-
-    -->
     <!--右边主体部分-->
     <el-col :span="20">
       <el-card shadow="always" style="margin-left: 3px; border-top: none">
@@ -49,7 +37,7 @@
             style="margin-left: 5px"
             type="primary"
             @click="getResourceTree"
-          ><em class="el-icon-video-play" />资源分配</el-button>
+          ><em class="el-icon-video-play"/>资源分配</el-button>
           <el-button
             style="margin-left: 5px"
             type="primary"
@@ -126,7 +114,9 @@
                   style="margin-left: 5px"
                   size="mini"
                   type="primary"
-                  @click="copyRole(scope.row)"
+                  v-clipboard:copy="onCopy(scope.row)"
+                  v-clipboard:success="onCopySuccess"
+                  v-clipboard:error="onCopyError"
                 >复制</el-button>
                 <el-button
                   style="margin-left: 5px"
@@ -374,7 +364,6 @@ import {
   remove,
   batchRemove,
   modify,
-  copy,
   commonQuery,
   queryRoleById,
   commonQueryUser,
@@ -385,12 +374,10 @@ import {
   modifyRoleCompany
 } from '@/api/right/role'
 
-import { commonQuery as companyQuery, queryCompanyById } from '@/api/org/company'
+import { commonQuery as companyQuery} from '@/api/org/company'
 import { treeQuery } from '@/api/right/resource'
-import getters from '@/store/getters'
 
-// import { FormDialog } from '../../../components/SD365UI'
-// import dialogDrag from '../../../utils/dialogdrap'
+
 export default {
   name: 'Role',
   data: function() {
@@ -486,6 +473,23 @@ export default {
     this.getCompany()
   },
   methods: {
+    onCopy(row) {
+      const res = {'角色':row.name,'角色编号':row.code,'角色备注':row.remark,'所属公司':row.companyDTO.name,'所属机构':row.organizationDTO.name}
+      const stringifyRes = JSON.stringify(res)
+      return stringifyRes
+    },
+    onCopySuccess() {
+      this.$message({
+        type: 'success',
+        message: '复制成功'
+      })
+    },
+    onCopyError() {
+      this.$message({
+        type: 'error',
+        message: '复制失败'
+      })
+    },
     transform(list) {
       // var map = {}; var node; var tree = []; var i
       var tree = []
@@ -589,7 +593,7 @@ export default {
       //     return item.parentId == -1
       // })
     },
-    handleNodeClick(data) {
+    handleNodeClick() {
       // this.roleQuery.companyId = data.id
       // this.fetchData(1)
       // this.roleQuery = {}
@@ -653,6 +657,11 @@ export default {
           if (roleVo.length === 1) {
             this.fillResourceTree(roleVo[0].id)
           }
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '资源树查询失败!'
+          })
         })
         .finally(() => {
           this.listLoading = false
@@ -778,7 +787,9 @@ export default {
       for (let i = 0; i < roleVo.length; i++) {
         roleDtoS[i] = {
           id: roleVo[i].id,
-          version: roleVo[i].version
+          version: roleVo[i].version,
+          name:roleVo[i].name,
+          code:roleVo[i].code
         }
       }
       if (roleDtoS.length !== 0) {
@@ -817,7 +828,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          remove(row.id, row.version)
+          remove(row.id, row.version,row.name,row.code)
             .then((response) => {
               this.fetchData(1)
               this.$message({
@@ -839,22 +850,22 @@ export default {
           })
         })
     },
-    copyRole(row) {
-      this.dialogType = 'copy'
-      this.updatedialogVisible = true
-      queryRoleById(row.id)
-        .then((res) => {
-          this.roleDto = res
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    // copyRole(row) {
+    //   this.dialogType = 'copy'
+    //   this.updatedialogVisible = true
+    //   queryRoleById(row.id)
+    //     .then((res) => {
+    //       this.roleDto = res
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
       // this.roleDto = row
       // this.selected = row
       // copy(row.id).then(response => {
       //   // this.fetchData(1)
       //   console.log(response)
-      //   debugger
+      //   // debugger
       //   this.$message({
       //     type: 'success',
       //     message: '复制成功!'
@@ -866,7 +877,7 @@ export default {
       //       message: '复制失败!'
       //     })
       //   })
-    },
+    // },
     // 修改信息展示
     updateFromInfo(row) {
       this.updatedialogVisible = true
@@ -878,6 +889,8 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+        // this.roleDto = row
+        // this.selected = row
     },
     // 修改或编辑角色
     updateRole() {
@@ -935,6 +948,7 @@ export default {
           })
       }
     },
+
     // 通过name查用户
     queryUserByName() {
       this.userPage.total = null
@@ -1081,7 +1095,12 @@ export default {
         // this.roleIdList.push(row.id)
         this.fillResourceTree(row.id)
         // debugger
-      })
+      }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '权限查询失败!'
+          })
+        })
     },
 
     // 禁用所有树节点
@@ -1095,7 +1114,7 @@ export default {
       return data
     },
 
-    // 选择表格
+    // 选择表格 TODO:这里为什么有这个？
     handleSelectionChange(selection, row) {
       const flag = selection.some((item) => {
         return item.id === row.id
