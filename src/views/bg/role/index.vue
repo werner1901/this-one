@@ -971,10 +971,11 @@ export default {
           this.userPage.total = parseInt(total)
           this.userPage.pages = parseInt(pages)
           this.userData = response.data
+          this.listLoading = false
           // debugger
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+          // setTimeout(() => {
+          //   this.listLoading = false
+          // }, 1.5 * 1000)
         })
         .catch(() => {
           this.listLoading = false
@@ -1114,7 +1115,7 @@ export default {
       return data
     },
 
-    // 选择表格 TODO:这里为什么有这个？
+    // 选择表格
     handleSelectionChange(selection, row) {
       const flag = selection.some((item) => {
         return item.id === row.id
@@ -1134,15 +1135,25 @@ export default {
     },
     // 记忆选中表格的checkbox
     toggleSelection() {
-      setTimeout(() => {
-        this.userData.forEach((user) => {
-          this.selectionData.forEach((selected) => {
-            if (user.id === selected.id) {
-              this.$refs.userTable.toggleRowSelection(user, true)
-            }
-          })
-        })
-      }, 500)
+      // if (roleVo.length === 1){
+      //   this.userData.forEach((user) => {
+      //     this.selectionData.forEach((selected) => {
+      //       if (user.id === selected.id) {
+      //         this.$refs.userTable.toggleRowSelection(user, true)
+      //       }
+      //     })
+      //   })
+      // }
+
+      // setTimeout(() => {
+      //   this.userData.forEach((user) => {
+      //     this.selectionData.forEach((selected) => {
+      //       if (user.id === selected.id) {
+      //         this.$refs.userTable.toggleRowSelection(user, true)
+      //       }
+      //     })
+      //   })
+      // }, 500)
     },
     // 在一个对象数据中寻找某个对象的下标,通过key的值相等，判断数组中是否包含对象
     arrFindObjIndex(arr, obj, key) {

@@ -62,7 +62,10 @@ export default {
      * @return {*}
      */
     open(){
-      this.$refs.formName.resetFields()
+      if(this.$refs.formName != undefined){
+        this.$refs.formName.resetFields()
+      }
+
     },
     /**
      * @description: 取消的时候回调外部时间

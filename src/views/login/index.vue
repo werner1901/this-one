@@ -196,7 +196,6 @@ export default {
      * 登录验证组件通过验证这触发登录校验
      */
     sliderSucess() {
-      console.log('sucess')
       var that = this
       setTimeout(function() { that.isShowSlider = false }, 1000)
       this.handleLogin()
