@@ -26,7 +26,7 @@
           <el-button
             style="margin-left: 5px"
             type="primary"
-            @click=";(adddialogVisible = true), (roleDto.status = 1)"
+            @click="addFormInfo"
           ><em class="el-icon-plus">增加</em></el-button>
           <el-button
             style="margin-left: 5px"
@@ -161,37 +161,8 @@
       width="60%"
       @OkButtonClick="addRole"
       @CancelButtonClick="adddialogVisible = false"
-    >
-      <el-row>
-        <el-col :span="11">
-          <el-form-item :span="12" label="角色名称" prop="name">
-            <el-input v-model="roleDto.name" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="11">
-          <el-form-item label="角色代码" prop="code">
-            <el-input v-model="roleDto.code" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="角色备注" prop="remark">
-            <el-input v-model="roleDto.remark" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="是否启用">
-            <template>
-              <el-radio v-model="roleDto.status" :label="1">是</el-radio>
-              <el-radio v-model="roleDto.status" :label="0">否</el-radio>
-            </template>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </sd-FormDialog>
+    ></sd-FormDialog>
+
     <!--    更新的弹框-->
     <sd-FormDialog
       :caption="updateTitle"
@@ -201,37 +172,8 @@
       width="60%"
       @OkButtonClick="updateRole"
       @CancelButtonClick="updatedialogVisible = false"
-    >
-      <el-row>
-        <el-col :span="11">
-          <el-form-item :span="12" label="角色名称" prop="name">
-            <el-input v-model="roleDto.name" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="11">
-          <el-form-item label="角色代码" prop="code">
-            <el-input v-model="roleDto.code" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="角色备注" prop="remark">
-            <el-input v-model="roleDto.remark" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="是否启用">
-            <template>
-              <el-radio v-model="roleDto.status" :label="1">是</el-radio>
-              <el-radio v-model="roleDto.status" :label="0">否</el-radio>
-            </template>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </sd-FormDialog>
+    ></sd-FormDialog>
+
     <!--用户分配的弹框-->
     <el-dialog
       v-dialogDrag
@@ -539,59 +481,7 @@ export default {
           })
         })
       })
-      // list.map(item => {
-      //   if (parseInt(item.parentId) === 1 && item.resourceType === 0) {
-      //     tree.push({ label: item.name, id: item.id, children: [] })
-      //   }
-      // })
-      // 存储二级节点
-      // list.map(item => {
-      //   tree.map(itemParent => {
-      //     if (itemParent.id === item.parentId) {
-      //
-      //       itemParent.children.push({ id: item.id, label: item.name })
-      //     }
-      //   })
-      // })
-      // tree.map(itemParent => {
-      //   list.map(item => {
-      //     if (itemParent.id === item.parentId) {
-      //       itemParent.children.push({ id: item.id, label: item.name })
-      //     }
-      //   })
-      // })
-      // console.log(tree)
-
-      // for (i = 0; i < list.length; i++) {
-      //   map[list[i].id] = list[i]
-      //   list[i].children = []
-      // }
-      // for (i = 0; i < list.length; i += 1) {
-      //   node = list[i]
-      //   if (node.parentId !== '-1') {
-      //     map[node.parentId].children.push(node)
-      //   } else {
-      //     tree.push(node)
-      //   }
-      // }
       return tree
-
-      // let map = {};
-      // data.forEach(item => {
-      //     if (! map[item.id]) {
-      //         map[item.id] = item;
-      //     }
-      // });
-
-      // data.forEach(item => {
-      //     if (item.parentId != -1) {
-      //         map[item.parentId].children ? map[item.parentId].children.push(item) : map[item.parentId].children = [item];
-      //     }
-      // });
-
-      // return data.filter(item => {
-      //     return item.parentId == -1
-      // })
     },
     handleNodeClick() {
       // this.roleQuery.companyId = data.id
@@ -726,7 +616,6 @@ export default {
           }).finally(()=>{
                this.listLoading = false
           })
-       
       }
 
       // this.resourcedialogVisible = false
@@ -878,6 +767,12 @@ export default {
       //     })
       //   })
     // },
+
+    //增加信息展示，默认status开启
+    addFormInfo() {
+      this.adddialogVisible = true
+      this.roleDto = {status:1}
+    },
     // 修改信息展示
     updateFromInfo(row) {
       this.updatedialogVisible = true
