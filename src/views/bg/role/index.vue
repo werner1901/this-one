@@ -166,14 +166,12 @@
     ></AddAndUpdateDialog>
 
     <!--用户分配的弹框-->
-    <el-dialog
-      v-dialogDrag
-      title="用户分配"
-      :visible.sync="userdialogVisible"
-      width="60%"
-      length="100%"
-      :before-close="handleClose"
-    >
+    <resourcedialog
+      :title="'用户分配'"
+      dialogType='user'
+      :dialogvisible="userdialogVisible"
+      @assignUser="assignUser"
+      >
       <searchbox
         boxType="user"
         @queryUserByName="queryUserByName">
@@ -205,7 +203,7 @@
         <el-table-column label="公司" align="center" prop="company.name" />
         <el-table-column label="部门" align="center" prop="departmentVO.name" />
       </el-table>
-      <!-- 分页条-->
+
       <el-pagination
         :v-model="userPage"
         :current-page.sync="userPage.pageNum"
@@ -216,24 +214,15 @@
         @size-change="handleUserSizeChange"
         @current-change="handleUserDataChange"
       />
-      <span slot="footer">
-        <el-button
-          style="margin-left: 30px"
-          @click="cancelUser"
-        >取 消</el-button>
-        <el-button type="primary" @click="assignUser">确 定</el-button>
-      </span>
-    </el-dialog>
+    </resourcedialog>
+
     <!--资源分配的弹框-->
-    <el-dialog
-      ref="tree"
-      v-dialogDrag
-      title="资源分配："
-      :visible.sync="resourcedialogVisible"
-      width="60%"
-      length="100%"
-      :before-close="handleClose"
-    >
+    <resourcedialog
+      :title="'资源分配'"
+      dialogType='resource'
+      :dialogvisible="resourcedialogVisible"
+      @assignResource="assignResource"
+      >
       <div style="overflow: auto; overflow-y: auto">
         <el-card
           v-loading="listLoading"
@@ -250,20 +239,14 @@
           />
         </el-card>
       </div>
-      <span slot="footer">
-        <el-button @click="resourcedialogVisible = false">取 消</el-button>
-        <el-button v-if="!isReviewPerMission" type="primary" @click="assignResource">确 定</el-button>
-      </span>
-    </el-dialog>
+    </resourcedialog>
     <!-- 公司分配的弹框 -->
-    <el-dialog
-      v-dialogDrag
-      title="公司分配"
-      :visible.sync="companydialogVisible"
-      width="60%"
-      length="100%"
-      :before-close="handleClose"
-    >
+    <resourcedialog
+      :title="'公司分配'"
+      dialogType='company'
+      :dialogvisible="companydialogVisible"
+      @assignCompany="assignCompany"
+      >
       <el-table
         ref="companyTable"
         v-loading="listLoading"
@@ -277,14 +260,7 @@
         <el-table-column label="公司编号" align="center" prop="code" />
         <el-table-column label="公司名称" align="center" prop="name" />
       </el-table>
-      <span slot="footer">
-        <el-button
-          style="margin-left: 30px"
-          @click="cancelCompany"
-        >取 消</el-button>
-        <el-button type="primary" @click="assignCompany">确 定</el-button>
-      </span>
-    </el-dialog>
+    </resourcedialog>
   </div>
 </template>
 
@@ -308,11 +284,12 @@ import { commonQuery as companyQuery} from '@/api/org/company'
 import { treeQuery } from '@/api/right/resource'
 import AddAndUpdateDialog from './add-and-update-dialog.vue';
 import searchbox from './search-box.vue'
+import resourcedialog from './resource-dialog.vue'
 
 
 export default {
   name: 'Role',
-  components:{AddAndUpdateDialog,searchbox},
+  components:{AddAndUpdateDialog,searchbox,resourcedialog},
   data: function() {
     return {
       addTitle: '增加角色',

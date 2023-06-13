@@ -1,6 +1,6 @@
 <template>
 <el-row style="margin-left: 7px; margin-top: -7px">
-  <div id="search">
+  <div>
     <el-form :inline="true">
       <slot></slot>
       <el-button
