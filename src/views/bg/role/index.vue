@@ -8,11 +8,11 @@
         boxType="role"
         @queryRoleByName="queryRoleByName">
           <el-form-item label="角色名称">
-                <el-input
-                  v-model="roleQuery.name"
-                  placeholder="请输入角色名称"
-                />
-              </el-form-item>
+            <el-input
+              v-model="roleQuery.name"
+              placeholder="请输入角色名称"
+            />
+          </el-form-item>
         </searchbox>
         <!--上方操作链接-->
         <div style="margin-bottom: 20px; margin-top: -0px">
@@ -133,17 +133,6 @@
           </el-table-column>
         </el-table>
         <!-- 分页条-->
-        <!-- <el-pagination
-          :v-model="rolePage"
-          :current-page.sync="rolePage.pageNum"
-          :page-size="rolePage.pageSize"
-          :page-sizes="[10, 15, 20, 50, 100, 200]"
-          layout="total,sizes,prev, pager, next, jumper"
-          :total="rolePage.total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        /> -->
-
         <tablepagination
         :page="rolePage"
         :paginationType="'role'"
@@ -209,17 +198,7 @@
         <el-table-column label="公司" align="center" prop="company.name" />
         <el-table-column label="部门" align="center" prop="departmentVO.name" />
       </el-table>
-
-      <!-- <el-pagination
-        :v-model="userPage"
-        :current-page.sync="userPage.pageNum"
-        :page-size="userPage.pageSize"
-        :page-sizes="[15]"
-        layout="total,sizes,prev, pager, next, jumper"
-        :total="userPage.total"
-        @size-change="handleUserSizeChange"
-        @current-change="handleUserDataChange"
-      /> -->
+      <!--    分页条-->
       <tablepagination
         :page="userPage"
         :paginationType="'user'"
@@ -246,7 +225,6 @@
             node-key="id"
             show-checkbox
             :data="resourceData"
-            @node-click="handleNodeClick"
           />
         </el-card>
       </div>
@@ -293,10 +271,10 @@ import {
 
 import { commonQuery as companyQuery} from '@/api/org/company'
 import { treeQuery } from '@/api/right/resource'
-import AddAndUpdateDialog from './add-and-update-dialog.vue';
+import AddAndUpdateDialog from './add-and-update-dialog.vue'
 import searchbox from './search-box.vue'
 import resourcedialog from './resource-dialog.vue'
-import tablepagination from './pagination.vue';
+import tablepagination from './pagination.vue'
 
 
 export default {
@@ -308,17 +286,17 @@ export default {
       updateTitle: '修改角色',
       userTitle: '用户分配',
       resourceTitle: '资源分配',
-      data: [],
-      treeData: [],
+      //初始化时请求公司名单
+      companyList: [],
       resourceData: [],
-      // defaultProps: {
-      //   children: 'children',
-      //   label: 'name'
-      // },
       listLoading: false,
+      //主表格的数据
       tableData: [],
+      //用户数据
       userData: [],
+      //公司数据
       companyData: [],
+      //角色的分页信息
       rolePage: {
         total: null,
         // 页号
@@ -328,6 +306,7 @@ export default {
 
         pages: null
       },
+      //用户的分页信息
       userPage: {
         total: null,
         // 页号
@@ -347,15 +326,12 @@ export default {
       userdialogVisible: false,
       resourcedialogVisible: false,
       companydialogVisible: false,
-      isReviewPerMission: false,
-      // userData: null,
-      // resourceTree: [],
-      // resourceData: null,
-      // userIdList: [],
-      // resourceId: [],
       adddialogVisible: false,
       updatedialogVisible: false,
+      isReviewPerMission: false,
+      //已选择行的信息
       roleVo: {},
+      //行的信息
       roleDto: {
         name: '',
         code: '',
@@ -371,10 +347,9 @@ export default {
       roleIdList: [],
       userIdList: [],
       resourceIdList: [],
-      selected: '', // 被选中的行
       resourcedialogType: '',
       selectionData: [], // 保存选中的id
-      dialogType: ''
+      updatedialogType: ''
     }
   },
   mounted() {},
@@ -400,11 +375,13 @@ export default {
         message: '复制失败'
       })
     },
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     transform(list) {
-      // var map = {}; var node; var tree = []; var i
       var tree = []
-      // var firstNode = []
-      // var secondNode = []
       // 存储一级节点（系统）
       list.map((item) => {
         if (parseInt(item.parentId) === -1 && item.resourceType === 2) {
@@ -451,33 +428,14 @@ export default {
       })
       return tree
     },
-    handleNodeClick() {
-      // this.roleQuery.companyId = data.id
-      // this.fetchData(1)
-      // this.roleQuery = {}
-    },
+
     /**
-     * 分页逻辑
-     *
+     * 页面初始化时查询公司
      */
-    // handleSizeChange(val) {
-    //   this.rolePage.pageSize = val
-    //   this.fetchData(this.rolePage.pageNum)
-    // },
-    // handleCurrentChange(val) {
-    //   this.fetchData(val)
-    // },
-    // handleUserSizeChange(val) {
-    //   this.userPage.pageSize = val
-    //   this.getUser(this.userPage.pageNum)
-    // },
-    // handleUserDataChange(val) {
-    //   this.getUser(val)
-    // },
     getCompany() {
       selectCompany()
         .then((response) => {
-          this.data = response.data
+          this.companyList = response.data
         })
         .catch(() => {
           this.$message({
@@ -485,9 +443,12 @@ export default {
             message: '公司查询失败!'
           })
         })
-      console.log(this.data)
     },
-    // 获取资源树
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     getResourceTree() {
       const roleVo = this.$refs.roleTable.selection
       if (roleVo == null || roleVo.length === 0) {
@@ -504,8 +465,6 @@ export default {
        */
       treeQuery(resourceQuery)
         .then((response) => {
-          // this.resourceData = response.data
-          console.log('response.data',response.data)
           this.resourceData = this.transform(response.data)
           for (let i = 0; i < roleVo.length; i++) {
             this.roleIdList.push(roleVo[i].id)
@@ -524,7 +483,11 @@ export default {
           this.listLoading = false
         })
     },
-    // 用户拥有资源的回填
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     fillResourceTree(roleId) {
       const resourceQuery = {}
       resourceQuery.pageSize = 1000
@@ -540,13 +503,14 @@ export default {
           console.log(err)
         })
     },
-    /***
-     *  取得资源树的信息进行角色对应的资源的分配
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
      */
     assignResource() {
       const list = this.$refs.tree.getCheckedNodes()
       const listParent = this.$refs.tree.getHalfCheckedKeys()
-      // const listParent = this.$refs.tree.data
       listParent.map((item) => {
         this.resourceIdList.push(item)
       })
@@ -584,23 +548,10 @@ export default {
                this.listLoading = false
           })
       }
-
-      // this.resourcedialogVisible = false
-      // const roleResource = {
-      //   resourceId: this.$refs.tree.getCheckedKeys(),
-      //   roleId: this.selection
-      // }
-      // const roleResourceDTO = new RoleResourceDTO(roleResource)
-      // this.assignRole(roleResourceDTO).then(response => {
-      //   this.$message({
-      //     message: '分配成功',
-      //     type: 'success'
-      //   })
-      //   // 进行重新加载
-      //   this.fetchData()
-      // })
     },
-    // 增加角色
+    /**
+     * 添加角色
+     */
     addRole() {
       this.adddialogVisible = false
       this.roleDto.version = '1'
@@ -625,14 +576,18 @@ export default {
           this.listLoading = false
         })
     },
-    // 通过名字查询
+    /**
+     * 用名字来查询角色
+     */
     queryRoleByName() {
       this.rolePage.total = null
       this.rolePage.pages = null
       this.rolePage.pageNum = 1
       this.fetchData(this.rolePage.pageNum)
     },
-    // 批量删除
+    /**
+     * 批量删除角色
+     */
     batchRemoveRole() {
       const roleVo = this.$refs.roleTable.selection
       if (roleVo == null || roleVo.length === 0) {
@@ -676,7 +631,10 @@ export default {
         })
       }
     },
-    // 删除角色
+    /**
+     * 单行删除角色
+     * @param row 所选中的行
+     */
     removeRole(row) {
       this.$confirm('确定删除记录吗', '提示', {
         confirmButtonText: '确定',
@@ -716,34 +674,39 @@ export default {
     //     .catch((err) => {
     //       console.log(err)
     //     })
-      // this.roleDto = row
-      // this.selected = row
-      // copy(row.id).then(response => {
-      //   // this.fetchData(1)
-      //   console.log(response)
-      //   // debugger
-      //   this.$message({
-      //     type: 'success',
-      //     message: '复制成功!'
-      //   })
-      // })
-      //   .catch(() => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '复制失败!'
-      //     })
-      //   })
+    //   this.roleDto = row
+    //   this.selected = row
+    //   copy(row.id).then(response => {
+    //     // this.fetchData(1)
+    //     console.log(response)
+    //     // debugger
+    //     this.$message({
+    //       type: 'success',
+    //       message: '复制成功!'
+    //     })
+    //   })
+    //     .catch(() => {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '复制失败!'
+    //       })
+    //     })
     // },
 
-    //增加信息展示，默认status开启
+    /**
+     * 增加角色的弹框信息
+     */
     addFormInfo() {
       this.adddialogVisible = true
       this.roleDto = {status:1}
     },
-    // 修改信息展示
+    /**
+     * 修改角色的弹框信息
+     * @param row 所选中的行
+     */
     updateFromInfo(row) {
       this.updatedialogVisible = true
-      this.dialogType = 'update'
+      this.updatedialogType = 'update'
       queryRoleById(row.id)
         .then((res) => {
           this.roleDto = res
@@ -751,12 +714,12 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-        // this.roleDto = row
-        // this.selected = row
     },
-    // 修改或编辑角色
+    /**
+     * 修改或复制角色
+     */
     updateRole() {
-      if (this.dialogType === 'update') {
+      if (this.updatedialogType === 'update') {
         const roleVo = JSON.parse(JSON.stringify(this.roleDto))
         modify(roleVo)
           .then((response) => {
@@ -777,11 +740,11 @@ export default {
             })
           })
           .finally(() => {
-            this.dialogType = ''
+            this.updatedialogType = ''
             this.roleVo = null
             this.updatedialogVisible = false
           })
-      } else if (this.dialogType === 'copy') {
+      } else if (this.updatedialogType === 'copy') {
         this.roleDto.version = '1'
         this.roleDto.createdBy = '2'
         this.roleDto.tenantId = '1'
@@ -805,13 +768,15 @@ export default {
             this.listLoading = false
           })
           .finally(() => {
-            this.dialogType = ''
+            this.updatedialogType = ''
             this.updatedialogVisible = false
           })
       }
     },
 
-    // 通过name查用户
+    /**
+     * 用名字查询用户
+     */
     queryUserByName() {
       this.userPage.total = null
       this.userPage.pages = null
@@ -819,8 +784,8 @@ export default {
       this.getUser(this.userPage.pageNum)
     },
     /**
-     * 查询出系统用户 
-     * @param
+     * 查询用户
+     * @param pageNum 当前所处页数
      */
     getUser(pageNum) {
       this.listLoading = true
@@ -834,18 +799,15 @@ export default {
           this.userPage.pages = parseInt(pages)
           this.userData = response.data
           this.listLoading = false
-          // debugger
-          // setTimeout(() => {
-          //   this.listLoading = false
-          // }, 1.5 * 1000)
         })
         .catch(() => {
           this.listLoading = false
         })
     },
-    // 分配用户
+    /**
+     * 用户分配
+     */
     assignUser() {
-      // 关闭弹窗
       const userVo = this.$refs.userTable.selection
       if (userVo == null || userVo.length === 0) {
         this.$message.error('至少选择一个用户进行操作')
@@ -855,7 +817,6 @@ export default {
         this.userIdList.push(userVo[i].id)
       }
       this.userdialogVisible = false
-      console.log(this.roleIdList)
       const userRoleDTO = {
         roleIds: this.roleIdList,
         userIds: this.userIdList
@@ -881,12 +842,9 @@ export default {
           this.selectionData = []
         })
     },
-    // 取消用户分配
-    cancelUser() {
-      this.userdialogVisible = false
-      this.selectionData = []
-    },
-    // 查询所有用户
+    /**
+     * 查询所有用户
+     */
     getUserAll() {
       const roleVo = this.$refs.roleTable.selection
       if (roleVo == null || roleVo.length === 0) {
@@ -899,10 +857,16 @@ export default {
       }
       this.getUser(this.userPage.pageNum)
     },
-    // eslint-disable-next-line no-dupe-keys,vue/no-dupe-keys
+    /**
+     * 刷新角色信息
+     */
     refreshData() {
       this.fetchData(this.rolePage.pageNum)
     },
+    /**
+     * 查询角色
+     * @param pageNum 当前所处页数
+     */
     fetchData(pageNum) {
       this.listLoading = true
       this.roleQuery.total = this.rolePage.total
@@ -910,7 +874,7 @@ export default {
       this.roleQuery.pageSize = this.rolePage.pageSize
       commonQuery(this.roleQuery)
         .then((response) => {
-          const { total, pageNum, pageSize, pages } = response // 如果异常则被axios 的拦截器拦截并且显示错误码和消息
+          const { total, pageNum, pageSize, pages } = response
           this.rolePage.total = parseInt(total)
           this.rolePage.pages = parseInt(pages)
           this.tableData = response.data
@@ -932,7 +896,11 @@ export default {
           this.listLoading = false
         })
     },
-    // 查看权限
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     permission(row) {
       this.resourcedialogVisible = true
       this.resourcedialogType = 'REVIEW'
@@ -958,7 +926,11 @@ export default {
         })
     },
 
-    // 禁用所有树节点
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     disableTreeNode(data) {
       data.map((item) => {
         this.$set(item, "disabled", true)
@@ -969,7 +941,11 @@ export default {
       return data
     },
 
-    // 选择表格
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     handleSelectionChange(selection, row) {
       const flag = selection.some((item) => {
         return item.id === row.id
@@ -988,6 +964,11 @@ export default {
       }
     },
     // 在一个对象数据中寻找某个对象的下标,通过key的值相等，判断数组中是否包含对象
+    /**
+     * 方法描述
+     * @param 参数名称 参数描述
+     * @return 返回值描述
+     */
     arrFindObjIndex(arr, obj, key) {
       let index = -1
       arr.forEach((item, idx) => {
@@ -997,7 +978,9 @@ export default {
       })
       return index
     },
-    // 获取所有公司信息
+    /**
+     * 获取所有公司信息
+     */
     getCompanyAll() {
       const roleVo = this.$refs.roleTable.selection
       if (roleVo == null || roleVo.length === 0) {
@@ -1017,12 +1000,15 @@ export default {
         this.listLoading = false
       })
     },
-    // 将某一角色所属公司填充至table
+    /**
+     * 公司信息预填入
+     * @param roleVo 所选行的信息
+     */
     fillCompanyInfo(roleVo) {
       if (roleVo.length === 1) {
         // 获取角色对应的授权公司列表
         queryRoleCompany(roleVo[0].id).then(res => {
-          const roleAuthCompanyIds = res.authCompanyIds  //授权公司列表
+          const roleAuthCompanyIds = res.authCompanyIds
           if (roleAuthCompanyIds) {
             this.$nextTick(() => {
               // 遍历table的数据并进行判断
@@ -1040,14 +1026,16 @@ export default {
         })
       }
     },
-    // 为角色分配公司
+    /**
+     * 公司分配
+     */
     assignCompany() {
       this.roleCompanyDTO.roleIds = this.$refs.roleTable.selection.map(role => role.id)
       this.roleCompanyDTO.authCompanyIds = this.$refs.companyTable.selection.map(company => company.id)
       modifyRoleCompany(this.roleCompanyDTO)
       .then(res => {
         if (res) {
-          this.cancelCompany()
+          this.companydialogVisible = false
           this.$message.success("角色所属公司分配成功")
         } else {
           this.$message.error("角色所属公司信息分配失败")
@@ -1060,9 +1048,6 @@ export default {
         this.roleCompanyDTO.roleIds = []
         this.roleCompanyDTO.authCompanyIds = []
       })
-    },
-    cancelCompany() {
-      this.companydialogVisible = false
     }
   }
 }
