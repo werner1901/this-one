@@ -4,23 +4,16 @@
     <el-col :span="20">
       <el-card shadow="always" style="margin-left: 3px; border-top: none">
         <!--搜索框-->
-        <el-row style="margin-left: 7px; margin-top: -7px">
-          <div id="search">
-            <el-form :inline="true">
-              <el-form-item label="角色名称">
+        <searchbox
+        boxType="role"
+        @queryRoleByName="queryRoleByName">
+          <el-form-item label="角色名称">
                 <el-input
                   v-model="roleQuery.name"
                   placeholder="请输入角色名称"
                 />
               </el-form-item>
-              <el-button
-                style="margin-left: 5px"
-                type="primary"
-                @click="queryRoleByName"
-              >查询</el-button>
-            </el-form>
-          </div>
-        </el-row>
+        </searchbox>
         <!--上方操作链接-->
         <div style="margin-bottom: 20px; margin-top: -0px">
           <el-button
@@ -181,16 +174,13 @@
       length="100%"
       :before-close="handleClose"
     >
-      <el-form :inline="true">
+      <searchbox
+        boxType="user"
+        @queryUserByName="queryUserByName">
         <el-form-item label="用户名称：">
           <el-input v-model="userQuery.name" placeholder="请输入用户名称" />
         </el-form-item>
-        <el-button
-          style="margin-left: 5px"
-          type="primary"
-          @click="queryUserByName"
-        >查询</el-button>
-      </el-form>
+        </searchbox>
       <el-table
         ref="userTable"
         v-loading="listLoading"
@@ -317,11 +307,12 @@ import {
 import { commonQuery as companyQuery} from '@/api/org/company'
 import { treeQuery } from '@/api/right/resource'
 import AddAndUpdateDialog from './add-and-update-dialog.vue';
+import searchbox from './search-box.vue'
 
 
 export default {
   name: 'Role',
-  components:{AddAndUpdateDialog},
+  components:{AddAndUpdateDialog,searchbox},
   data: function() {
     return {
       addTitle: '增加角色',
