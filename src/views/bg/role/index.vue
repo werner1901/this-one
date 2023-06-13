@@ -133,7 +133,7 @@
           </el-table-column>
         </el-table>
         <!-- 分页条-->
-        <el-pagination
+        <!-- <el-pagination
           :v-model="rolePage"
           :current-page.sync="rolePage.pageNum"
           :page-size="rolePage.pageSize"
@@ -142,7 +142,13 @@
           :total="rolePage.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-        />
+        /> -->
+
+        <tablepagination
+        :page="rolePage"
+        :paginationType="'role'"
+        @fetchData="fetchData">
+      </tablepagination>
       </el-card>
     </el-col>
     <!--  增加的弹框-->
@@ -204,7 +210,7 @@
         <el-table-column label="部门" align="center" prop="departmentVO.name" />
       </el-table>
 
-      <el-pagination
+      <!-- <el-pagination
         :v-model="userPage"
         :current-page.sync="userPage.pageNum"
         :page-size="userPage.pageSize"
@@ -213,7 +219,12 @@
         :total="userPage.total"
         @size-change="handleUserSizeChange"
         @current-change="handleUserDataChange"
-      />
+      /> -->
+      <tablepagination
+        :page="userPage"
+        :paginationType="'user'"
+        @getUser="getUser">
+      </tablepagination>
     </resourcedialog>
 
     <!--资源分配的弹框-->
@@ -285,11 +296,12 @@ import { treeQuery } from '@/api/right/resource'
 import AddAndUpdateDialog from './add-and-update-dialog.vue';
 import searchbox from './search-box.vue'
 import resourcedialog from './resource-dialog.vue'
+import tablepagination from './pagination.vue';
 
 
 export default {
   name: 'Role',
-  components:{AddAndUpdateDialog,searchbox,resourcedialog},
+  components:{AddAndUpdateDialog,searchbox,resourcedialog,tablepagination},
   data: function() {
     return {
       addTitle: '增加角色',
@@ -448,21 +460,20 @@ export default {
      * 分页逻辑
      *
      */
-    handleSizeChange(val) {
-      this.rolePage.pageSize = val
-      this.fetchData(this.rolePage.pageNum)
-    },
-    handleCurrentChange(val) {
-      this.fetchData(val)
-    },
-    handleUserSizeChange(val) {
-      this.userPage.pageSize = val
-      this.getUser(this.userPage.pageNum)
-    },
-    handleUserDataChange(val) {
-      this.getUser(val)
-      this.toggleSelection()
-    },
+    // handleSizeChange(val) {
+    //   this.rolePage.pageSize = val
+    //   this.fetchData(this.rolePage.pageNum)
+    // },
+    // handleCurrentChange(val) {
+    //   this.fetchData(val)
+    // },
+    // handleUserSizeChange(val) {
+    //   this.userPage.pageSize = val
+    //   this.getUser(this.userPage.pageNum)
+    // },
+    // handleUserDataChange(val) {
+    //   this.getUser(val)
+    // },
     getCompany() {
       selectCompany()
         .then((response) => {
@@ -888,14 +899,6 @@ export default {
       }
       this.getUser(this.userPage.pageNum)
     },
-    // 关闭弹窗
-    handleClose() {
-      this.adddialogVisible = false
-      this.updatedialogVisible = false
-      this.userdialogVisible = false
-      this.resourcedialogVisible = false
-      this.companydialogVisible = false
-    },
     // eslint-disable-next-line no-dupe-keys,vue/no-dupe-keys
     refreshData() {
       this.fetchData(this.rolePage.pageNum)
@@ -983,28 +986,6 @@ export default {
           this.selectionData.push(row)
         }
       }
-    },
-    // 记忆选中表格的checkbox
-    toggleSelection() {
-      // if (roleVo.length === 1){
-      //   this.userData.forEach((user) => {
-      //     this.selectionData.forEach((selected) => {
-      //       if (user.id === selected.id) {
-      //         this.$refs.userTable.toggleRowSelection(user, true)
-      //       }
-      //     })
-      //   })
-      // }
-
-      // setTimeout(() => {
-      //   this.userData.forEach((user) => {
-      //     this.selectionData.forEach((selected) => {
-      //       if (user.id === selected.id) {
-      //         this.$refs.userTable.toggleRowSelection(user, true)
-      //       }
-      //     })
-      //   })
-      // }, 500)
     },
     // 在一个对象数据中寻找某个对象的下标,通过key的值相等，判断数组中是否包含对象
     arrFindObjIndex(arr, obj, key) {
