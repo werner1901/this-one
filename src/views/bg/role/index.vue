@@ -153,26 +153,24 @@
       </el-card>
     </el-col>
     <!--  增加的弹框-->
-    <sd-FormDialog
+    <AddAndUpdateDialog
       :caption="addTitle"
       :visible="adddialogVisible"
       :model="roleDto"
-      :rules="rules"
       width="60%"
       @OkButtonClick="addRole"
       @CancelButtonClick="adddialogVisible = false"
-    ></sd-FormDialog>
+    ></AddAndUpdateDialog>
 
     <!--    更新的弹框-->
-    <sd-FormDialog
+    <AddAndUpdateDialog
       :caption="updateTitle"
       :visible="updatedialogVisible"
       :model="roleDto"
-      :rules="rules"
       width="60%"
       @OkButtonClick="updateRole"
       @CancelButtonClick="updatedialogVisible = false"
-    ></sd-FormDialog>
+    ></AddAndUpdateDialog>
 
     <!--用户分配的弹框-->
     <el-dialog
@@ -318,10 +316,12 @@ import {
 
 import { commonQuery as companyQuery} from '@/api/org/company'
 import { treeQuery } from '@/api/right/resource'
+import AddAndUpdateDialog from './add-and-update-dialog.vue';
 
 
 export default {
   name: 'Role',
+  components:{AddAndUpdateDialog},
   data: function() {
     return {
       addTitle: '增加角色',
@@ -373,18 +373,6 @@ export default {
       // resourceData: null,
       // userIdList: [],
       // resourceId: [],
-      rules: {
-        name: [
-          { required: true, message: '角色名称不能为空', trigger: 'blur' }
-        ],
-        code: [
-          { required: true, message: '角色编号不能为空', trigger: 'blur' }
-        ],
-        remark: [{ required: false, message: '备注不能为空', trigger: 'blur' }],
-        companyId: [
-          { required: true, message: '所属公司不能为空', trigger: 'change' }
-        ]
-      },
       adddialogVisible: false,
       updatedialogVisible: false,
       roleVo: {},

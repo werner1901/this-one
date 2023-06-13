@@ -19,6 +19,7 @@
     :lock-scroll="false"
     :modal="true"
     :close-on-click-modal="false"
+    @open="onDialogOpen"
     @close="onBtnCancelClick"
   >
     <el-form
@@ -28,35 +29,7 @@
       :rules="rules"
       label-width="80px"
     >
-    <el-row>
-        <el-col :span="11">
-          <el-form-item :span="12" label="角色名称" prop="name">
-            <el-input v-model="model.name" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="11">
-          <el-form-item label="角色代码" prop="code">
-            <el-input v-model="model.code" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="角色备注" prop="remark">
-            <el-input v-model="model.remark" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="是否启用">
-            <template>
-              <el-radio v-model="model.status" :label="1">是</el-radio>
-              <el-radio v-model="model.status" :label="0">否</el-radio>
-            </template>
-          </el-form-item>
-        </el-col>
-      </el-row>
+    <slot></slot>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button id="btnCancel" @click="onBtnCancelClick">取 消</el-button>
@@ -84,6 +57,11 @@ export default {
     }
   },
   methods: {
+    onDialogOpen(){
+      if(this.$refs['formName'] != undefined){
+        this.$refs['formName'].resetFields()
+      }
+    },
     /**
      * @description: 取消的时候回调外部时间
      * @return {*}
