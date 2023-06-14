@@ -2,7 +2,7 @@
   <el-dialog
     v-dialogDrag
     :title='title'
-    :visible.sync="dialogvisible"
+    :visible.sync="visible"
     width="60%"
     length="100%"
     :before-close="handleClose"
@@ -19,7 +19,7 @@ export default {
   props: {
     title: { type: String, required: true, default: '' },
     dialogType: { type: String, required: true},
-    dialogvisible: { type: Boolean, default: false },
+    visible: { type: Boolean, default: false },
     // model: { type: Object, required: true },
     // rules: { type: Object, required: true }
   },
@@ -29,7 +29,8 @@ export default {
   },
   methods: {
     handleClose() {
-      this.dialogvisible = false
+      // console.log()
+      this.$emit('update:visible', false)
     },
     assign(){
       if(this.dialogType === 'user'){
@@ -41,6 +42,7 @@ export default {
       if(this.dialogType === 'company'){
         this.$emit("assignCompany")
       }
+
     }
   }
 }

@@ -164,7 +164,7 @@
     <resourcedialog
       :title="'用户分配'"
       dialogType='user'
-      :dialogvisible="userdialogVisible"
+      :visible.sync="userdialogVisible"
       @assignUser="assignUser"
       >
       <searchbox
@@ -210,7 +210,7 @@
     <resourcedialog
       :title="'资源分配'"
       dialogType='resource'
-      :dialogvisible="resourcedialogVisible"
+      :visible.sync="resourcedialogVisible"
       @assignResource="assignResource"
       >
       <div style="overflow: auto; overflow-y: auto">
@@ -233,7 +233,7 @@
     <resourcedialog
       :title="'公司分配'"
       dialogType='company'
-      :dialogvisible="companydialogVisible"
+      :visible.sync="companydialogVisible"
       @assignCompany="assignCompany"
       >
       <el-table
