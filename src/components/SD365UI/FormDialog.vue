@@ -70,7 +70,7 @@ export default {
       this.queryLoading = true
       this.$emit('CancelButtonClick', this)
       this.queryLoading = false
-      this.visible = false
+      this.$emit('update:visible', false)
       // this.$refs.formName.resetFields()
     },
     /**
@@ -85,7 +85,7 @@ export default {
           this.queryLoading = true
           this.$emit('OkButtonClick', this) // 回调父组件的时间具体业务逻辑由父组件实现
           this.queryLoading = false
-          this.visible = false
+          this.$emit('update:visible', false)
           // this.$message.success('操作成功xxxxxxxxxxxxx')
           // this.$refs.formName.resetFields()
         }

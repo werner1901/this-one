@@ -143,7 +143,7 @@
     <!--  增加的弹框-->
     <AddAndUpdateDialog
       :caption="addTitle"
-      :visible="adddialogVisible"
+      :visible.sync="adddialogVisible"
       :model="roleDto"
       width="60%"
       @OkButtonClick="addRole"
@@ -153,7 +153,7 @@
     <!--    更新的弹框-->
     <AddAndUpdateDialog
       :caption="updateTitle"
-      :visible="updatedialogVisible"
+      :visible.sync="updatedialogVisible"
       :model="roleDto"
       width="60%"
       @OkButtonClick="updateRole"
