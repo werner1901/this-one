@@ -61,7 +61,9 @@ export default {
       dialogType:'user',
       userdialogVisible:false,
       listLoading:false,
+      //角色id列表
       roleIdList:[],
+      //用户id列表
       userIdList:[],
       //用户数据
       userData: [],
@@ -76,16 +78,13 @@ export default {
         pages: null
       },
       selectionData:[],
+      //用户查询参数
       userQuery: {},
     };
   },
   methods: {
     getUserSearch() {
       this.userdialogVisible = true
-      // const roleVo = this.roleVo
-      // for (let i = 0; i < roleVo.length; i++) {
-      //   this.roleIdList.push(roleVo[i].id)
-      // }
       this.getUser(this.userPage.pageNum)
     },
     /**
@@ -119,9 +118,7 @@ export default {
         })
     },
     /**
-     * 方法描述
-     * @param 参数名称 参数描述
-     * @return 返回值描述
+     * 获得所选行
      */
      handleSelectionChange(selection, row) {
       const flag = selection.some((item) => {
@@ -140,12 +137,7 @@ export default {
         }
       }
     },
-    // 在一个对象数据中寻找某个对象的下标,通过key的值相等，判断数组中是否包含对象
-    /**
-     * 方法描述
-     * @param 参数名称 参数描述
-     * @return 返回值描述
-     */
+
     arrFindObjIndex(arr, obj, key) {
       let index = -1
       arr.forEach((item, idx) => {

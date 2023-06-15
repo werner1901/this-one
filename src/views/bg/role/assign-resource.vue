@@ -30,21 +30,23 @@ export default {
   name: "assignresource",
   components:{resourcedialog},
   props: {
-    // resourcedialogVisible:{ type: Boolean, default: false },
     roleVo:{ type: undefined, required:true,default:[]},
   },
   data() {
     return {
       title:'资源分配',
       dialogType:'resource',
+      //资源id列表
       resourceIdList:[],
+      //是否为权限查看模式
       resourcedialogType: '',
+      //资源信息
       resourceData: [],
+      //角色id列表
       roleIdList:[],
       isReviewPerMission: false,
       resourcedialogVisible:false,
       listLoading:false
-      // roleVo:this.roleVo,
     };
   },
   methods: {

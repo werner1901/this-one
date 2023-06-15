@@ -23,7 +23,7 @@
 <script>
 import resourcedialog from './resource-dialog.vue'
 import { commonQuery as companyQuery} from '@/api/org/company'
-import { modifyRoleCompany } from '@/api/right/role'
+import { modifyRoleCompany,queryRoleCompany, } from '@/api/right/role'
 export default {
   name: "assigncompany",
   components:{resourcedialog},
@@ -36,8 +36,11 @@ export default {
       dialogType:'company',
       companydialogVisible:false,
       listLoading:false,
+      //角色id列表
       roleIdList:[],
+      //公司信息
       companyData:[],
+      //公司分配参数
       roleCompanyDTO:{}
     };
   },
@@ -50,7 +53,7 @@ export default {
       this.listLoading = true
       companyQuery({}).then(res => {
         this.companyData = res.data
-        this.fillCompanyInfo(roleVo)
+        this.fillCompanyInfo(this.roleVo)
       })
       .catch(() => {
         this.$message.error('公司信息获取失败')
