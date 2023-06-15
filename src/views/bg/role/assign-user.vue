@@ -1,5 +1,5 @@
 <template>
-  <resourcedialog
+  <basedialog
     :title="title"
     :dialogType="dialogType"
     :visible.sync="userdialogVisible"
@@ -41,30 +41,30 @@
       @getUser="getUser"
     >
     </tablepagination>
-  </resourcedialog>
+  </basedialog>
 </template>
 
 <script>
-import { assignUser,commonQueryUser } from '@/api/right/role';
-import resourcedialog from './resource-dialog.vue'
-import searchbox from './search-box.vue'
-import tablepagination from './pagination.vue'
+import { assignUser, commonQueryUser } from '@/api/right/role'
+import basedialog from './components/base-dialog.vue'
+import searchbox from './components/search-box.vue'
+import tablepagination from './components/pagination.vue'
 export default {
-  name: "assignuser",
-  components:{resourcedialog,searchbox,tablepagination},
+  name: 'assignuser',
+  components: { basedialog, searchbox, tablepagination },
   props: {
-    roleVo:{ type: undefined, required:true,default:[]},
+    roleVo: { type: undefined, required: true, default: [] },
   },
   data() {
     return {
-      title:'用户分配',
-      dialogType:'user',
-      userdialogVisible:false,
-      listLoading:false,
+      title: '用户分配',
+      dialogType: 'user',
+      userdialogVisible: false,
+      listLoading: false,
       //角色id列表
-      roleIdList:[],
+      roleIdList: [],
       //用户id列表
-      userIdList:[],
+      userIdList: [],
       //用户数据
       userData: [],
       //用户的分页信息
@@ -75,12 +75,12 @@ export default {
         // 页大小
         pageSize: 15,
 
-        pages: null
+        pages: null,
       },
-      selectionData:[],
+      selectionData: [],
       //用户查询参数
       userQuery: {},
-    };
+    }
   },
   methods: {
     getUserSearch() {
@@ -120,7 +120,7 @@ export default {
     /**
      * 获得所选行
      */
-     handleSelectionChange(selection, row) {
+    handleSelectionChange(selection, row) {
       const flag = selection.some((item) => {
         return item.id === row.id
       })
@@ -166,29 +166,29 @@ export default {
       }
       const userRoleDTO = {
         roleIds: this.roleIdList,
-        userIds: this.userIdList
+        userIds: this.userIdList,
       }
       assignUser(userRoleDTO)
         .then((response) => {
           this.$message({
             message: '分配成功',
-            type: 'success'
+            type: 'success',
           })
           this.userIdList = []
           this.roleIdList = []
           // 进行重新加载
-          this.$emit("fetchData", 1)
+          this.$emit('fetchData', 1)
         })
         .catch(() => {
           this.$message({
             message: '分配失败',
-            type: 'error'
+            type: 'error',
           })
         })
         .finally(() => {
           this.selectionData = []
         })
     },
-  }
-};
+  },
+}
 </script>

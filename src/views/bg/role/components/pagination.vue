@@ -13,12 +13,11 @@
 <script>
 export default {
   props: {
-    page:{ type: Object, required: true},
-    paginationType:{ type: String, required: true}
+    page: { type: Object, required: true },
+    paginationType: { type: String, required: true },
   },
   data() {
-    return {
-    }
+    return {}
   },
   methods: {
     handleSizeChange(val) {
@@ -36,23 +35,23 @@ export default {
       this.$emit('getUser')
     },
 
-    handleSizeChange(val){
-      if (this.paginationType === 'role'){
-        this.handleSizeChange(val);
+    handleSizeChange(val) {
+      if (this.paginationType === 'role') {
+        this.handleSizeChange(val)
       }
       if (this.paginationType === 'user') {
-        this.handleUserSizeChange(val);
+        this.handleUserSizeChange(val)
       }
     },
 
-    handleDataChange(val){
-      if (this.paginationType === 'role'){
-        this.handleCurrentChange(val);
+    handleDataChange(val) {
+      if (this.paginationType === 'role') {
+        this.handleCurrentChange(val)
       }
       if (this.paginationType === 'user') {
-        this.handleUserDataChange(val);
+        this.handleUserDataChange(val)
       }
     },
-  }
+  },
 }
 </script>

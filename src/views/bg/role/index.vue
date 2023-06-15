@@ -4,14 +4,9 @@
     <el-col :span="20">
       <el-card shadow="always" style="margin-left: 3px; border-top: none">
         <!--搜索框-->
-        <searchbox
-        boxType="role"
-        @queryRoleByName="queryRoleByName">
+        <searchbox boxType="role" @queryRoleByName="queryRoleByName">
           <el-form-item label="角色名称">
-            <el-input
-              v-model="roleQuery.name"
-              placeholder="请输入角色名称"
-            />
+            <el-input v-model="roleQuery.name" placeholder="请输入角色名称" />
           </el-form-item>
         </searchbox>
         <!--上方操作链接-->
@@ -20,32 +15,35 @@
             style="margin-left: 5px"
             type="primary"
             @click="addFormInfo"
-          ><em class="el-icon-plus">增加</em></el-button>
+            ><em class="el-icon-plus">增加</em></el-button
+          >
           <el-button
             style="margin-left: 5px"
             type="danger"
             @click="batchRemoveRole"
-          ><em class="el-icon-delete">删除</em></el-button>
+            ><em class="el-icon-delete">删除</em></el-button
+          >
           <el-button
             style="margin-left: 5px"
             type="primary"
             @click="getResource"
-          ><em class="el-icon-video-play"/>资源分配</el-button>
-          <el-button
-            style="margin-left: 5px"
-            type="primary"
-            @click="getUserAll"
-          ><em class="el-icon-s-custom">用户分配</em></el-button>
+            ><em class="el-icon-video-play" />资源分配</el-button
+          >
+          <el-button style="margin-left: 5px" type="primary" @click="getUserAll"
+            ><em class="el-icon-s-custom">用户分配</em></el-button
+          >
           <el-button
             style="margin-left: 5px"
             type="primary"
             @click="getCompanyAll"
-          ><em class="el-icon-s-custom">公司分配</em></el-button>
+            ><em class="el-icon-s-custom">公司分配</em></el-button
+          >
           <el-button
             style="margin-left: 5px"
             type="primary"
             @click="refreshData"
-          ><em class="el-icon-refresh">刷新</em></el-button>
+            ><em class="el-icon-refresh">刷新</em></el-button
+          >
         </div>
         <!--主体表格-->
         <el-table
@@ -108,34 +106,39 @@
                   size="mini"
                   type="primary"
                   @click="copyRole(scope.row)"
-                >复制</el-button>
+                  >复制</el-button
+                >
                 <el-button
                   style="margin-left: 5px"
                   size="mini"
                   @click="updateFromInfo(scope.row)"
-                >编辑</el-button>
+                  >编辑</el-button
+                >
                 <el-button
                   style="margin-left: 5px"
                   size="mini"
                   type="danger"
                   @click="removeRole(scope.row)"
-                >删除</el-button>
+                  >删除</el-button
+                >
                 <el-button
                   style="margin-left: 5px"
                   size="mini"
                   type="warning"
                   @click="permission(scope.row)"
-                >查看权限</el-button>
+                  >查看权限</el-button
+                >
               </div>
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页条-->
         <tablepagination
-        :page="rolePage"
-        :paginationType="'role'"
-        @fetchData="fetchData">
-      </tablepagination>
+          :page="rolePage"
+          :paginationType="'role'"
+          @fetchData="fetchData"
+        >
+        </tablepagination>
       </el-card>
     </el-col>
 
@@ -160,11 +163,7 @@
     ></addandupdatedialog>
 
     <!--用户分配的弹框-->
-    <assignuser
-      :roleVo="roleVo"
-      ref="assignroleuser"
-      @fetchData="fetchData"
-      >
+    <assignuser :roleVo="roleVo" ref="assignroleuser" @fetchData="fetchData">
     </assignuser>
 
     <!--资源分配的弹框-->
@@ -172,14 +171,14 @@
       :roleVo="roleVo"
       ref="assignroleresource"
       @fetchData="fetchData"
-      >
+    >
     </assignresource>
     <!-- 公司分配的弹框 -->
     <assigncompany
       :roleVo="roleVo"
       ref="assignrolecompany"
       @fetchData="fetchData"
-      >
+    >
     </assigncompany>
   </div>
 </template>
@@ -193,20 +192,27 @@ import {
   commonQuery,
   queryRoleById,
   selectCompany,
-  copy
+  copy,
 } from '@/api/right/role'
 
-import addandupdatedialog from './add-and-update-dialog.vue'
-import searchbox from './search-box.vue'
-import tablepagination from './pagination.vue'
+import addandupdatedialog from './components/add-and-update-dialog.vue'
+import searchbox from './components/search-box.vue'
+import tablepagination from './components/pagination.vue'
 import assignresource from './assign-resource.vue'
 import assignuser from './assign-user.vue'
 import assigncompany from './assign-company.vue'
 
 export default {
   name: 'Role',
-  components:{addandupdatedialog,searchbox,tablepagination,assignresource,assignuser,assigncompany},
-  data: function() {
+  components: {
+    addandupdatedialog,
+    searchbox,
+    tablepagination,
+    assignresource,
+    assignuser,
+    assigncompany,
+  },
+  data: function () {
     return {
       addTitle: '增加角色',
       updateTitle: '修改角色',
@@ -222,7 +228,7 @@ export default {
         pageNum: 1,
         // 页大小
         pageSize: 10,
-        pages: null
+        pages: null,
       },
       //角色查询参数
       roleQuery: { companyId: '' },
@@ -243,10 +249,10 @@ export default {
         created_by: '',
         companyId: '',
         tenantId: '',
-        orgId: ''
+        orgId: '',
       },
       updatedialogType: '',
-      selected:{}
+      selected: {},
     }
   },
   mounted() {},
@@ -266,7 +272,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'error',
-            message: '公司查询失败!'
+            message: '公司查询失败!',
           })
         })
     },
@@ -287,7 +293,7 @@ export default {
           this.fetchData(1)
           this.$message({
             type: 'success',
-            message: '添加成功!'
+            message: '添加成功!',
           })
           // Just to simulate the time of the request
           setTimeout(() => {
@@ -323,15 +329,15 @@ export default {
         roleDtoS[i] = {
           id: roleVo[i].id,
           version: roleVo[i].version,
-          name:roleVo[i].name,
-          code:roleVo[i].code
+          name: roleVo[i].name,
+          code: roleVo[i].code,
         }
       }
       if (roleDtoS.length !== 0) {
         this.$confirm('确定删除记录吗', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
           .then(() => {
             batchRemove(roleDtoS).then((response) => {
@@ -339,19 +345,19 @@ export default {
             })
             this.$message({
               type: 'success',
-              message: '删除成功!'
+              message: '删除成功!',
             })
           })
           .catch(() => {
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '已取消删除',
             })
           })
       } else {
         this.$message({
           message: '请选择需要删除的数据',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
@@ -364,28 +370,28 @@ export default {
       this.$confirm('确定删除记录吗', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
-          remove(row.id, row.version,row.name,row.code)
+          remove(row.id, row.version, row.name, row.code)
             .then((response) => {
               this.fetchData(1)
               this.$message({
                 type: 'success',
-                message: '删除成功!'
+                message: '删除成功!',
               })
             })
             .catch(() => {
               this.$message({
                 type: 'error',
-                message: '删除失败!'
+                message: '删除失败!',
               })
             })
         })
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
         })
     },
@@ -406,16 +412,17 @@ export default {
         })
       this.roleDto = row
       this.selected = row
-      copy(row.id).then(response => {
-        this.$message({
-          type: 'success',
-          message: '复制成功!'
+      copy(row.id)
+        .then((response) => {
+          this.$message({
+            type: 'success',
+            message: '复制成功!',
+          })
         })
-      })
         .catch(() => {
           this.$message({
             type: 'error',
-            message: '复制失败!'
+            message: '复制失败!',
           })
         })
     },
@@ -425,7 +432,7 @@ export default {
      */
     addFormInfo() {
       this.adddialogVisible = true
-      this.roleDto = {status:1}
+      this.roleDto = { status: 1 }
     },
 
     /**
@@ -456,7 +463,7 @@ export default {
             // debugger
             this.$message({
               type: 'success',
-              message: '修改成功!'
+              message: '修改成功!',
             })
             // 新增之后重新加载
             this.fetchData(1)
@@ -465,7 +472,7 @@ export default {
           .catch(() => {
             this.$message({
               type: 'error',
-              message: '修改失败!'
+              message: '修改失败!',
             })
           })
           .finally(() => {
@@ -486,7 +493,7 @@ export default {
             this.fetchData(1)
             this.$message({
               type: 'success',
-              message: '复制成功!'
+              message: '复制成功!',
             })
             // Just to simulate the time of the request
             setTimeout(() => {
@@ -547,7 +554,7 @@ export default {
     /**
      * 获得所选角色
      */
-     getRoleSelection(){
+    getRoleSelection() {
       this.roleVo = this.$refs.roleTable.selection
       if (this.roleVo == null || this.roleVo.length === 0) {
         this.$message.error('至少选择一个角色进行操作')
@@ -558,9 +565,9 @@ export default {
     /**
      * 打开资源分配的弹框
      */
-    getResource(){
+    getResource() {
       this.getRoleSelection()
-      this.$refs.assignroleresource.getResourceTree();
+      this.$refs.assignroleresource.getResourceTree()
     },
 
     /**
@@ -574,9 +581,9 @@ export default {
     /**
      * 打开用户分配的弹框
      */
-     getUserAll() {
+    getUserAll() {
       this.getRoleSelection()
-      this.$refs.assignroleuser.getUserSearch();
+      this.$refs.assignroleuser.getUserSearch()
     },
 
     /**
@@ -586,7 +593,7 @@ export default {
       this.getRoleSelection()
       this.$refs.assignrolecompany.getCompanySearch()
     },
-  }
+  },
 }
 </script>
 

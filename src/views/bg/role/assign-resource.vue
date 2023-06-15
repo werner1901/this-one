@@ -1,53 +1,48 @@
 <template>
-  <resourcedialog
-      :title="title"
-      :dialogType="dialogType"
-      :visible.sync="resourcedialogVisible"
-      @assignResource="assignResource"
+  <basedialog
+    :title="title"
+    :dialogType="dialogType"
+    :visible.sync="resourcedialogVisible"
+    @assignResource="assignResource"
+  >
+    <div style="overflow: auto; overflow-y: auto">
+      <el-card
+        v-loading="listLoading"
+        shadow="always"
+        style="overflow: auto; height: 500px"
       >
-      <div style="overflow: auto; overflow-y: auto">
-        <el-card
-          v-loading="listLoading"
-          shadow="always"
-          style="overflow: auto;height: 500px;"
-        >
-          <el-tree
-            ref="tree"
-            node-key="id"
-            show-checkbox
-            :data="resourceData"
-          />
-        </el-card>
-      </div>
-    </resourcedialog>
+        <el-tree ref="tree" node-key="id" show-checkbox :data="resourceData" />
+      </el-card>
+    </div>
+  </basedialog>
 </template>
 
 <script>
-import { assignResource } from '@/api/right/role';
+import { assignResource } from '@/api/right/role'
 import { treeQuery } from '@/api/right/resource'
-import resourcedialog from './resource-dialog.vue'
+import basedialog from './components/base-dialog.vue'
 export default {
-  name: "assignresource",
-  components:{resourcedialog},
+  name: 'assignresource',
+  components: { basedialog },
   props: {
-    roleVo:{ type: undefined, required:true,default:[]},
+    roleVo: { type: undefined, required: true, default: [] },
   },
   data() {
     return {
-      title:'资源分配',
-      dialogType:'resource',
+      title: '资源分配',
+      dialogType: 'resource',
       //资源id列表
-      resourceIdList:[],
+      resourceIdList: [],
       //是否为权限查看模式
       resourcedialogType: '',
       //资源信息
       resourceData: [],
       //角色id列表
-      roleIdList:[],
+      roleIdList: [],
       isReviewPerMission: false,
-      resourcedialogVisible:false,
-      listLoading:false
-    };
+      resourcedialogVisible: false,
+      listLoading: false,
+    }
   },
   methods: {
     /**
@@ -55,7 +50,7 @@ export default {
      * @param list treeQuery请求返回的数组
      * @return 返回处理后的数组结构
      */
-     treeTransform(list) {
+    treeTransform(list) {
       var tree = []
       // 存储一级节点（系统）
       list.map((item) => {
@@ -70,7 +65,7 @@ export default {
             itemParent.children.push({
               id: item.id,
               label: item.name,
-              children: []
+              children: [],
             })
           }
         })
@@ -83,7 +78,7 @@ export default {
               itemSecondParent.children.push({
                 id: item.id,
                 label: item.name,
-                children: []
+                children: [],
               })
             }
           })
@@ -106,7 +101,7 @@ export default {
     /**
      * 构建资源树并预填入资源信息
      */
-     getResourceTree() {
+    getResourceTree() {
       // const roleVo = this.$refs.roleTable.selection
       const roleVo = this.roleVo
       this.listLoading = true
@@ -124,10 +119,11 @@ export default {
           if (roleVo.length === 1) {
             this.fillResourceTree(roleVo[0].id)
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
             type: 'error',
-            message: '资源树查询失败!'
+            message: '资源树查询失败!',
           })
         })
         .finally(() => {
@@ -155,47 +151,49 @@ export default {
     /**
      * 资源分配
      */
-     assignResource() {
+    assignResource() {
       const list = this.$refs.tree.getCheckedNodes()
       const listParent = this.$refs.tree.getHalfCheckedKeys()
       listParent.map((item) => {
         this.resourceIdList.push(item)
       })
-      this.listLoading=true
+      this.listLoading = true
       for (let i = 0; i < list.length; i++) {
         this.resourceIdList.push(list[i].id)
       }
       if (this.resourcedialogType === 'REVIEW') {
         this.resourcedialogType = ''
-      } else {// 构建角色资源对象
+      } else {
+        // 构建角色资源对象
         const roleVo = this.roleVo
         for (let i = 0; i < roleVo.length; i++) {
-            this.roleIdList.push(roleVo[i].id)
+          this.roleIdList.push(roleVo[i].id)
         }
         const roleResourceDTO = {
           roleIds: this.roleIdList,
-          resourceIds: this.resourceIdList
+          resourceIds: this.resourceIdList,
         }
         // 请求后端接口
         assignResource(roleResourceDTO)
           .then((response) => {
             this.$message({
               message: '分配成功',
-              type: 'success'
+              type: 'success',
             })
             this.resourcedialogVisible = false
             this.resourceIdList = []
             this.roleIdList = []
             // 进行重新加载
-            this.$emit("fetchData", 1)
+            this.$emit('fetchData', 1)
           })
           .catch(() => {
             this.$message({
               message: '分配失败',
-              type: 'error'
+              type: 'error',
             })
-          }).finally(()=>{
-            this.listLoading=false
+          })
+          .finally(() => {
+            this.listLoading = false
           })
       }
     },
@@ -204,24 +202,26 @@ export default {
      * 查看权限
      * @param row 所选行
      */
-     permission(row) {
+    permission(row) {
       this.resourcedialogVisible = true
       this.resourcedialogType = 'REVIEW'
       this.isReviewPerMission = true
       const resourceQuery = {}
       resourceQuery.pageSize = 1000
-      treeQuery(resourceQuery).then((response) => {
-        this.resourceData = this.treeTransform(response.data)
+      treeQuery(resourceQuery)
+        .then((response) => {
+          this.resourceData = this.treeTransform(response.data)
 
-        // 查看权限时，所有树节点全部禁用
-        this.resourceData = this.disableTreeNode(this.resourceData)
+          // 查看权限时，所有树节点全部禁用
+          this.resourceData = this.disableTreeNode(this.resourceData)
 
-        this.fillResourceTree(row.id)
-        // debugger
-      }).catch(() => {
+          this.fillResourceTree(row.id)
+          // debugger
+        })
+        .catch(() => {
           this.$message({
             type: 'error',
-            message: '权限查询失败!'
+            message: '权限查询失败!',
           })
         })
     },
@@ -233,15 +233,13 @@ export default {
      */
     disableTreeNode(data) {
       data.map((item) => {
-        this.$set(item, "disabled", true)
-        if (item.children && item.children.length > 0){
+        this.$set(item, 'disabled', true)
+        if (item.children && item.children.length > 0) {
           item.children = this.disableTreeNode(item.children)
         }
       })
       return data
     },
-
-  }
-
-};
+  },
+}
 </script>
