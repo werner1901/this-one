@@ -174,7 +174,6 @@ export default {
           roleIds: this.roleIdList,
           resourceIds: this.resourceIdList
         }
-        console.log(roleResourceDTO)
         // 请求后端接口
         assignResource(roleResourceDTO)
           .then((response) => {
