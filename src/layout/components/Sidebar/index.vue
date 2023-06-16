@@ -54,7 +54,7 @@ export default {
       'sidebar'
     ]),
     /**
-     * 取得全部路由该路由已经根据角色的权限再登录完成后生成
+     * 取得全部路由，该路由已经根据角色的权限在登录完成后生成
      */
     routes() {
       return this.$router.options.routes

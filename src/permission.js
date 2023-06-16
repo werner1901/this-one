@@ -13,20 +13,18 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
-import addRoutesByResources from '@/utils/routes-add'
+import checkAndCompleteRoute from './roleresourcehelper.js'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
+
 router.onReady(() => {
   /**
    * 如何已经登录存在资源就可以直接登录，初次登录不调用这个
    */
-  if (store.getters.resources) {
-    console.log(store.getters.resources)
-    const resources = store.getters.resources
-    addRoutesByResources(resources)
-  }
+  checkAndCompleteRoute()
+
   // 此处注意：通配符 '*' 不能在默认路由router/index.js里面添加，否则会造成刷新页面404等错误
   router.addRoutes([{ path: '*', redirect: '/404', hidden: true }])
   // }
@@ -56,17 +54,9 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
-          // get user info
+          //get user info
           await store.dispatch('user/getInfo')
-          // 需要在store添加对应方法、参数，并且需要在Commit之后调用
-          if (store.getters.resources) {
-            // 动态添加路由
-
-            console.log(store.getters.resources)
-            const resources = store.getters.resources
-            // 根据资源列表添加路由
-            addRoutesByResources(resources)
-          }
+          checkAndCompleteRoute()
           // 此处注意：通配符 '*' 不能在默认路由router/index.js里面添加，否则会造成刷新页面404等错误
           router.addRoutes([{ path: '*', redirect: '/404', hidden: true }])
           next()

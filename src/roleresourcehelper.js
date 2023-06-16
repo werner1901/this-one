@@ -1,11 +1,8 @@
+import store from './store'
 import router from '@/router'
 import { constantRoutes } from '@/router'
+import { getInfo } from '@/api/authentication'
 
-/**
- * 系统所支持的所有的页面组件都这里定义，根据后端所返回的角色对应的资源的 url 去匹配取得相应的 @View
- * 该模式采用预定义的模式，如果需要进一步改进也可以不定义该数组，完全由后端配置生成数组，当前版本暂定采用
- * 此预定义简单模式
- */
 export const components = {
   '@/layout': () => import('@/layout'),
   // TODO:添加对应需要导入的组件，'资源path': () => import('对应资源文件')
@@ -171,13 +168,14 @@ function addOrUpdateRoutes(menus) {
 
 function addRoutesByResources(resources) {
   try {
-    console.log(router.options.routes)
-    console.log(resources)
+    console.log(router.options.routes+"啊啊啊啊啊")
+    console.log(resources+'啊啊啊啊啊')
     // 从资源列表递归获取菜单
 
     const menus = getMenus(resources, null)
     console.log(menus)
     // 通过菜单新增、删除、更新路由
+    debugger
     addOrUpdateRoutes(menus)
   } catch (e) {
     console.log('动态加载路由出错')
@@ -185,4 +183,19 @@ function addRoutesByResources(resources) {
   }
 }
 
-export default addRoutesByResources
+
+function checkAndCompleteRoute(){
+  if (store.getters.resources) {
+    const resources = store.getters.resources
+    addRoutesByResources(resources)
+  }else{
+    store.dispatch('user/getInfo').then(res =>{
+    })
+    if (store.getters.resources) {
+      const resources = store.getters.resources
+      addRoutesByResources(resources)
+    }
+  }
+}
+
+export default checkAndCompleteRoute
