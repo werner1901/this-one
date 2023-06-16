@@ -168,8 +168,8 @@ function addOrUpdateRoutes(menus) {
 
 function addRoutesByResources(resources) {
   try {
-    console.log(router.options.routes+"啊啊啊啊啊")
-    console.log(resources+'啊啊啊啊啊')
+    console.log(router.options.routes)
+    console.log(resources)
     // 从资源列表递归获取菜单
 
     const menus = getMenus(resources, null)
